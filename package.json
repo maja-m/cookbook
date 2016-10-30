@@ -1,8 +1,10 @@
 {
   "name": "cookbook",
+  "version": "0.0.1",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "dependencies": {
     "bcryptjs": "^0.7.12",
