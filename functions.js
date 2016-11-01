@@ -3,11 +3,6 @@ var bcrypt = require('bcryptjs'),
     config = require('./config.js'), //config file contains all tokens and other private info
     db = require('orchestrate')(config.db); //config.db holds Orchestrate token
 
-function newRecipe() {
-  console.log("jestem!");
-  alert("jestem!");
-}
-
 //used in local-signup strategy
 exports.localReg = function (username, password) {
   var deferred = Q.defer();
@@ -15,7 +10,7 @@ exports.localReg = function (username, password) {
   var user = {
     "username": username,
     "password": hash,
-    "avatar": "http://placepuppy.it/images/homepage/Beagle_puppy_6_weeks.JPG"
+    "avatar": "http://handlebarsjs.com/images/handlebars_logo.png"
   }
   //check if username is already assigned in our database
   db.get('local-users', username)
@@ -58,7 +53,7 @@ exports.localAuth = function (username, password) {
     console.log(hash);
     console.log(bcrypt.compareSync(password, hash));
     if (bcrypt.compareSync(password, hash)) {
-      deferred.resolve(result.body);
+      deferred.resolve(result.body);      //result.body jest całym użytkownikiem z bazy (JSON)
     } else {
       console.log("PASSWORDS NOT MATCH");
       deferred.resolve(false);
@@ -73,4 +68,39 @@ exports.localAuth = function (username, password) {
   });
 
   return deferred.promise;
+}
+
+exports.addRecipe = function (url) {
+  var request = require("request")
+  request({
+    url: url,
+    json: true
+  }, function (error, response, body) {
+    if (!error && response.statusCode === 200) {
+      console.log("jesteeeeeeeeeeeeeeeeeeeem");
+      var id = body.title + ' - ' + body.domain;
+      db.merge('local-users', 'maja', {                 //----------------------poprawić usera
+        "recipes" : {
+          [id] : body
+        }
+      })
+      .then(function (result) {
+        console.log("dodano przepis" + id + "pomyślnie")
+      })
+      .fail(function (err) {
+        console.log("błąd przy dodawaniu przepisu")
+      })
+    }
+  })
+}
+
+exports.getRecipe = function (username) {
+  db.get('local-users', username)
+  .then(function (result){
+    var hash = result.body.recipe;
+    console.log(hash);
+    //return hash;
+  }).fail(function (err){
+    console.log("buuuuuuuuuuu");
+  });
 }

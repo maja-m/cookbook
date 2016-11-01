@@ -11,13 +11,18 @@
     <div class="panel-body">
       <p>Username: {{user.username}}</p>
       <p>Avatar: <img src="{{user.avatar}}"/></p>
+      <!--<p>Recipe (domain): {{user.recipe.domain}}</p>-->
+      Recipes:<ul>
+        {{#each user.recipes}}
+          <li>{{title}}</li>
+        {{/each}}
+</ul>
     </div>
     <div class="panel-body">
       <form action="/newRecipe" method="post">
         <fieldset>
           <label for="recipeUri">Add a new recipe: </label>
           <input type="text" id="recipeUri" name="recipeUri" placeholder="Enter the recipe's URI" />
-            <input type="text" name="recipeUri"><br>
             <input type="submit" value="Add" />
         </fieldset>
       </form>

@@ -137,12 +137,28 @@ app.post('/login', passport.authenticate('local-signin', {
 );
 
 app.post('/newRecipe', function(req, res) {
-  //res.send('You sent the nameg "' + req.body.recipeUri + '".');
-  //--------------------------------------------------------------------------------------------------------++++++++++++++++++++++++++++++++++++++++++++
+  var uri = req.body.recipeUri;
+  var url = 'https://www.readability.com/api/content/v1/parser?url=' + uri.toString().substr(0, uri.toString().length - 1) + '&token=7cf9222f443675ed002997b4c25a8df51e0a046d';
+  //res.send('You sent the nameg "' + uri.toString().substr(0, uri.toString().length - 1) + '".');
+  funct.addRecipe(url);
+  req.session.success = 'The recipe was successfully added!';
+  //res.redirect(req.get('referer'));
+  res.redirect('..');
 
-  console.log(req.body);
-  res.redirect('/');
-  req.session.success = 'ADDED!';
+  // var request = require("request")
+  // request({
+  //   url: url,
+  //   json: true
+  // }, function (error, response, body) {
+  //   if (!error && response.statusCode === 200) {
+  //     // /console.log(body) // Print the json response
+  //     //res.send(body);   //res.send(body["domain"]);
+  //     //res.render('home');
+  //   }
+  // })
+
+  //var recipe = funct.getRecipe('maja');                                 //<------------------------------
+  //res.send('You sent the nameg');
 });
 
 //logs user out of site, deleting them from the session, and returns to homepage
