@@ -11,21 +11,26 @@
     <div class="panel-body">
       <p>Username: {{user.username}}</p>
       <p>Avatar: <img src="{{user.avatar}}"/></p>
-      <!--<p>Recipe (domain): {{user.recipe.domain}}</p>-->
-      Recipes:<ul>
+      Recipes:
+      <ul id = "recipesList" class="recipesList">
         {{#each user.recipes}}
-          <li>{{title}}</li>
+          <a href="/recipe/{{title}}"><li id={{url}} >{{title}}</li></a>
         {{/each}}
-</ul>
-    </div>
-    <div class="panel-body">
-      <form action="/newRecipe" method="post">
-        <fieldset>
-          <label for="recipeUri">Add a new recipe: </label>
-          <input type="text" id="recipeUri" name="recipeUri" placeholder="Enter the recipe's URI" />
-            <input type="submit" value="Add" />
-        </fieldset>
-      </form>
+      </ul>
+      <div class="panel-body">
+        <form action="/newRecipe" method="post">
+            <label for="recipeUri">Add a new recipe: </label>
+            <input type="text" id="recipeUri" name="recipeUri" placeholder="Enter the recipe's URI" />
+              <input type="submit" value="Add" />
+        </form>
+      </div>
+      {{#each user.recipes}}
+        {{#ifChosen title}}
+          <h1>Recipe:</h1>
+          <h2>{{title}}</h2>
+          <div>{{{content}}}</div>
+        {{/ifChosen}}
+      {{/each}}
     </div>
   </div>
   

@@ -10,7 +10,7 @@ exports.localReg = function (username, password) {
     var user = {
         "username": username,
         "password": hash,
-        "avatar": "http://handlebarsjs.com/images/handlebars_logo.png"
+        "avatar": ""
     };
     //check if username is already assigned in our database
     db.get('local-users', username)
@@ -97,7 +97,7 @@ exports.addRecipe = function (url) {
         if (!error && response.statusCode === 200) {
             console.log("Request successful");
             var id = body.title + ' - ' + body.domain;
-            db.merge('local-users', 'Maja', {                 //----------------------poprawić usera
+            db.merge('local-users', 'maja', {                 //----------------------poprawić usera
                     "recipes": {
                         [id]: body
                     }
@@ -117,14 +117,3 @@ exports.addRecipe = function (url) {
 
     return deferred.promise;
 };
-
-exports.getRecipe = function (username) {
-    db.get('local-users', username)
-        .then(function (result) {
-            var hash = result.body.recipe;
-            console.log(hash);
-            //return hash;
-        }).fail(function (err) {
-        console.log("buuuuuuuuuuu");
-    });
-}

@@ -8,6 +8,7 @@ var express = require('express'),
     methodOverride = require('method-override'),
     session = require('express-session'),
     passport = require('passport'),
+    handlebars = require('handlebars'),
     LocalStrategy = require('passport-local');
 
 //We will be creating these two files shortly
@@ -154,22 +155,14 @@ app.post('/newRecipe', function (req, res) {
         //res.redirect(req.get('referer'));
         res.redirect('..');
     });
-
-    // var request = require("request")
-    // request({
-    //   url: url,
-    //   json: true
-    // }, function (error, response, body) {
-    //   if (!error && response.statusCode === 200) {
-    //     // /console.log(body) // Print the json response
-    //     //res.send(body);   //res.send(body["domain"]);
-    //     //res.render('home');
-    //   }
-    // })
-
-    //var recipe = funct.getRecipe('maja');                                 //<------------------------------
-    //res.send('You sent the nameg');
 });
+
+var chosenTitle;
+
+app.get('/recipe/:title', function (req, res) {
+  chosenTitle = req.params.title;
+  res.redirect('..');
+})
 
 //logs user out of site, deleting them from the session, and returns to homepage
 app.get('/logout', function (req, res) {
@@ -184,3 +177,12 @@ app.get('/logout', function (req, res) {
 var port = process.env.PORT || 5000; //select your port or let it pull from your .env file
 app.listen(port);
 console.log("listening on " + port + "!");
+
+
+handlebars.registerHelper('ifChosen', function(title, options) {
+  console.log("Chosen title: " + chosenTitle);
+  if(title === chosenTitle) {
+    return options.fn(this);
+  }
+  return options.inverse(this);
+});
