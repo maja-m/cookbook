@@ -57,6 +57,8 @@
       </div><!-- /.container-fluid -->
     </nav>
 
+    <div id="alert"></div>
+
       
     {{#if error}}
       <p class="alert alert-warning">{{error}}</p>
@@ -84,5 +86,32 @@
 
     <!-- Latest compiled and minified JavaScript -->
   <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+  <script>
+    var editButton = document.getElementById("editButton");
+    var saveButton = document.getElementById("saveButton");
+    var $content = $("#content");
+    var title;
+
+    editButton.addEventListener('click', function () {
+      saveButton.style="display:inline;"
+
+      $content.attr('contentEditable', true);
+
+      title = $("#title").text();
+
+      event.preventDefault();
+    });
+
+    saveButton.addEventListener('click', function () {
+      saveButton.style="display:none;"
+
+      $content.attr('contentEditable', false);
+
+      $.post('/updateRecipe', {content: $content.html(), title: title}, function(data, textStatus, xhr) {
+        $("#alert").html('<p class="alert alert-success">' + data + '</p>');
+      });
+      
+    });
+  </script>
 </body>
 </html>

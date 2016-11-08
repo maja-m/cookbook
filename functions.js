@@ -96,7 +96,7 @@ exports.addRecipe = function (url) {
     }, function (error, response, body) {
         if (!error && response.statusCode === 200) {
             console.log("Request successful");
-            var id = body.title + ' - ' + body.domain;
+            var id = body.title + ' - ' + body.domain;        //----------------------niech sam generuje id
             db.merge('local-users', 'maja', {                 //----------------------poprawić usera
                     "recipes": {
                         [id]: body

@@ -20,20 +20,22 @@
       <div class="panel-body">
         <form action="/newRecipe" method="post">
             <label for="recipeUri">Add a new recipe: </label>
-            <input type="text" id="recipeUri" name="recipeUri" placeholder="Enter the recipe's URI" />
-              <input type="submit" value="Add" />
+            <input type="text" id="recipeUri" name="recipeUri" class="form-control" placeholder="Enter the recipe's URI" />
+              <button type="submit" class="btn btn-primary">Add</button>
         </form>
       </div>
       {{#each user.recipes}}
         {{#ifChosen title}}
+          <button id="editButton" class="btn btn-default">Edit</button>
+          <button id="saveButton" class="btn btn-primary" style="display:none;">Save</button>
           <h1>Recipe:</h1>
-          <h2>{{title}}</h2>
-          <div>{{{content}}}</div>
+          <h2 id="title">{{title}}</h2>
+          <div id="content">{{{content}}}</div>
         {{/ifChosen}}
       {{/each}}
     </div>
   </div>
-  
+
 {{else}}
   <div class="jumbotron">
     <h1>Orchestrate User Authentication</h1>

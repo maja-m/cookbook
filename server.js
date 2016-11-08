@@ -157,6 +157,11 @@ app.post('/newRecipe', function (req, res) {
     });
 });
 
+app.post('/updateRecipe', function (req, res) {
+    var data = req.body;                                        //---------------------databaza
+    res.send('Hurra zmieniono ' + data.title);
+});
+
 var chosenTitle;
 
 app.get('/recipe/:title', function (req, res) {
