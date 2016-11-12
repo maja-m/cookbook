@@ -1,8 +1,7 @@
 <!-- views/home.handlebars -->
 {{#if user}}
   <div class="jumbotron">
-    <h1>Orchestrate User Authentication</h1>
-    <p>Below is your profile information!</p>
+    <h1>Cookbook</h1>
   </div>
   <div class="panel panel-default">
     <div class="panel-heading">
@@ -14,7 +13,7 @@
       Recipes:
       <ul id = "recipesList" class="recipesList">
         {{#each user.recipes}}
-          <a href="/recipe/{{title}}"><li id={{url}} >{{title}}</li></a>
+          <a href="/recipe/{{@key}}"><li id={{url}} >{{title}}</li></a>
         {{/each}}
       </ul>
       <div class="panel-body">
@@ -25,7 +24,7 @@
         </form>
       </div>
       {{#each user.recipes}}
-        {{#ifChosen title}}
+        {{#ifChosen @key}}
           <button id="editButton" class="btn btn-default">Edit</button>
           <button id="saveButton" class="btn btn-primary" style="display:none;">Save</button>
           <h1>Recipe:</h1>

@@ -11,9 +11,7 @@ var express = require('express'),
     handlebars = require('handlebars'),
     LocalStrategy = require('passport-local');
 
-//We will be creating these two files shortly
-var config = require('./config.js'), //config file contains all tokens and other private info
-    funct = require('./functions.js'); //funct file contains our helper functions for our Passport and database work
+var db = require('./db.js');
 
 var app = express();
 
@@ -27,9 +25,9 @@ passport.serializeUser(function (user, done) {
 
 passport.deserializeUser(function (username, done) {
     console.log(`Deserializing user ${username}`);
-    var user = funct.getUser(username).then(function (user) {
+    var user = db.getUser(username).then(function (user) {
         done(null, user);
-    }).fail(function (error) {
+    }).catch(function (error) {
         console.error(`Deserializing user ${username} failed`);
         console.error(error);
     });
@@ -41,7 +39,7 @@ passport.use('local-signin',
         { passReqToCallback: true }, //allows us to pass back the request to the callback
         function (req, username, password, done) {
             console.log('local-signin callback');
-            funct.localAuth(username, password)
+            db.authenticate(username, password)
                 .then(function (user) {
                     if (user) {
                         console.log("LOGGED IN AS: " + user.username);
@@ -54,18 +52,19 @@ passport.use('local-signin',
                         done(null, user);
                     }
                 })
-                .fail(function (err) {
-                    console.log(err.body);
+                .catch(function (err) {
+                    console.log(err);
                 });
         }
     )
 );
+
 // Use the LocalStrategy within Passport to register/"signup" users.
 passport.use('local-signup',
     new LocalStrategy(
         { passReqToCallback: true }, //allows us to pass back the request to the callback
         function (req, username, password, done) {
-            funct.localReg(username, password)
+            db.register(username, password)
                 .then(function (user) {
                     if (user) {
                         console.log("REGISTERED: " + user.username);
@@ -78,8 +77,8 @@ passport.use('local-signup',
                         done(null, user);
                     }
                 })
-                .fail(function (err) {
-                    console.log(err.body);
+                .catch(function (err) {
+                    console.log(err);
                 });
         }
     )
@@ -147,12 +146,11 @@ app.post('/login', passport.authenticate('local-signin', {
 );
 
 app.post('/newRecipe', function (req, res) {
+    var name = req.user.username;
     var uri = req.body.recipeUri;
-    var url = 'https://www.readability.com/api/content/v1/parser?url=' + uri.toString().substr(0, uri.toString().length - 1) + '&token=7cf9222f443675ed002997b4c25a8df51e0a046d';
-    //res.send('You sent the nameg "' + uri.toString().substr(0, uri.toString().length - 1) + '".');
-    funct.addRecipe(url).then(function () {
+    var url = uri.toString().substr(0, uri.toString().length - 1);
+    db.addRecipe(name, url).then(function () {
         req.session.success = 'The recipe was successfully added!';
-        //res.redirect(req.get('referer'));
         res.redirect('..');
     });
 });
@@ -162,11 +160,12 @@ app.post('/updateRecipe', function (req, res) {
     res.send('Hurra zmieniono ' + data.title);
 });
 
-var chosenTitle;
+var chosenId;                                                //-----------------------id!
 
-app.get('/recipe/:title', function (req, res) {
-  chosenTitle = req.params.title;
-  res.redirect('..');
+app.get('/recipe/:id', function (req, res) {
+  chosenId = req.params.id;
+  //res.redirect('..');                                           //------------------render
+  res.render('home', {user: req.user});
 })
 
 //logs user out of site, deleting them from the session, and returns to homepage
@@ -184,9 +183,9 @@ app.listen(port);
 console.log("listening on " + port + "!");
 
 
-handlebars.registerHelper('ifChosen', function(title, options) {
-  console.log("Chosen title: " + chosenTitle);
-  if(title === chosenTitle) {
+handlebars.registerHelper('ifChosen', function(id, options) {
+  console.log("Chosen id: " + chosenId);
+  if(id === chosenId) {
     return options.fn(this);
   }
   return options.inverse(this);
