@@ -36,7 +36,7 @@ passport.deserializeUser(function (username, done) {
 // Use the LocalStrategy within Passport to login/”signin” users.
 passport.use('local-signin',
     new LocalStrategy(
-        { passReqToCallback: true }, //allows us to pass back the request to the callback
+        {passReqToCallback: true}, //allows us to pass back the request to the callback
         function (req, username, password, done) {
             console.log('local-signin callback');
             db.authenticate(username, password)
@@ -62,7 +62,7 @@ passport.use('local-signin',
 // Use the LocalStrategy within Passport to register/"signup" users.
 passport.use('local-signup',
     new LocalStrategy(
-        { passReqToCallback: true }, //allows us to pass back the request to the callback
+        {passReqToCallback: true}, //allows us to pass back the request to the callback
         function (req, username, password, done) {
             db.register(username, password)
                 .then(function (user) {
@@ -163,9 +163,9 @@ app.post('/updateRecipe', function (req, res) {
 var chosenId;                                                //-----------------------id!
 
 app.get('/recipe/:id', function (req, res) {
-  chosenId = req.params.id;
-  //res.redirect('..');                                           //------------------render
-  res.render('home', {user: req.user});
+    chosenId = req.params.id;
+    //res.redirect('..');                                           //------------------render
+    res.render('home', {user: req.user});
 })
 
 //logs user out of site, deleting them from the session, and returns to homepage
@@ -183,10 +183,10 @@ app.listen(port);
 console.log("listening on " + port + "!");
 
 
-handlebars.registerHelper('ifChosen', function(id, options) {
-  console.log("Chosen id: " + chosenId);
-  if(id === chosenId) {
-    return options.fn(this);
-  }
-  return options.inverse(this);
+handlebars.registerHelper('ifChosen', function (id, options) {
+    console.log("Chosen id: " + chosenId);
+    if (id === chosenId) {
+        return options.fn(this);
+    }
+    return options.inverse(this);
 });
