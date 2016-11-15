@@ -160,7 +160,7 @@ app.post('/updateRecipe', function (req, res) {
     res.send('Hurra zmieniono ' + data.title);
 });
 
-var chosenId;                                                //-----------------------id!
+var chosenId;                                                //-----------------------wybiera się dla wszystkich użytkowników...
 
 app.get('/recipe/:id', function (req, res) {
   chosenId = req.params.id;
