@@ -12,7 +12,7 @@
 
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-  
+
   </head>
 
   <body>
@@ -38,8 +38,8 @@
             <li>
               {{#if user}}
                 <p class="navbar-text">
-                  <strong>Hi,</strong> 
-                  <img src="{{user.avatar}}" width="20" height="20"> 
+                  <strong>Hi,</strong>
+                  <img src="{{user.avatar}}" width="20" height="20">
                   {{user.username}}
                 </p>
                 </li>
@@ -59,7 +59,7 @@
 
     <div id="alert"></div>
 
-      
+
     {{#if error}}
       <p class="alert alert-warning">{{error}}</p>
     {{/if}}
@@ -74,7 +74,7 @@
 
     <!--where our other templates will insert-->
     {{{body}}}
-      
+
 
     </div> <!-- /container -->
 
@@ -86,32 +86,32 @@
 
     <!-- Latest compiled and minified JavaScript -->
   <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+    <!-- include summernote css/js-->
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.css" rel="stylesheet">
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.js"></script>
   <script>
-    var editButton = document.getElementById("editButton");
-    var saveButton = document.getElementById("saveButton");
+    var editButton = document.getElementById("edit");
+    var saveButton = document.getElementById("save");
     var $content = $("#content");
-    var title;
+    var $id = $("#id").text();;
+    var $title = $("#title").text();
 
-    editButton.addEventListener('click', function () {
-      saveButton.style="display:inline;"
+    var edit = function() {
+        saveButton.style="display:inline;"
+        $('.click2edit').summernote({focus: true});
+    };
 
-      $content.attr('contentEditable', true);
+    var save = function() {
+        saveButton.style="display:none;";
 
-      title = $("#title").text();
+        var makrup = $('.click2edit').summernote('code');
+        $('.click2edit').summernote('destroy');
 
-      event.preventDefault();
-    });
-
-    saveButton.addEventListener('click', function () {
-      saveButton.style="display:none;"
-
-      $content.attr('contentEditable', false);
-
-      $.post('/updateRecipe', {content: $content.html(), title: title}, function(data, textStatus, xhr) {
-        $("#alert").html('<p class="alert alert-success">' + data + '</p>');
-      });
-      
-    });
+        $.post('/updateRecipe', {content: $content.html(), id: $id, title: $title}, function(data, textStatus, xhr) {
+            $("#alert").html('<p class="alert alert-success">' + data + '</p>');
+        });
+    };
   </script>
 </body>
 </html>

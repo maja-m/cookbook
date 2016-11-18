@@ -18,11 +18,16 @@
       </ul>
       <div class="panel-body">
         <form action="/newRecipe" method="post">
-            <label for="recipeUri">Add a new recipe: </label>
-            <input type="text" id="recipeUri" name="recipeUri" class="form-control" placeholder="Enter the recipe's URI" />
-              <button type="submit" class="btn btn-primary">Add</button>
+          <label for="recipeUri">Add a new recipe: </label>
+          <input type="text" id="recipeUri" name="recipeUri" class="form-control" placeholder="Enter the recipe's URI" />
+          <button type="submit" class="btn btn-primary">Add</button>
         </form>
       </div>
+        <button id="edit" class="btn btn-primary" onclick="edit()" type="button">Edit</button>
+        <button id="save" class="btn btn-primary" onclick="save()" type="button" style="display:none;">Save</button>
+        <h2 id="title">{{recipe.title}}</h2>
+        <div id="content" class="click2edit">{{{recipe.content}}}</div>
+        <div id="id">{{id}}</div>
     </div>
   </div>
 

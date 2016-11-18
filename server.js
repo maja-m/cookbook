@@ -17,7 +17,6 @@ var app = express();
 
 //===============PASSPORT===============
 
-// Passport session setup.
 passport.serializeUser(function (user, done) {
     console.log(`Serializing user ${user.username}`);
     done(null, user.username);
@@ -33,7 +32,6 @@ passport.deserializeUser(function (username, done) {
     });
 });
 
-// Use the LocalStrategy within Passport to login/”signin” users.
 passport.use('local-signin',
     new LocalStrategy(
         {passReqToCallback: true}, //allows us to pass back the request to the callback
@@ -48,7 +46,7 @@ passport.use('local-signin',
                     }
                     if (!user) {
                         console.log("COULD NOT LOG IN");
-                        req.session.error = 'Could not log user in. Please try again.'; //inform user could not log them in
+                        req.session.error = 'Could not log user in. Please try again.';
                         done(null, user);
                     }
                 })
@@ -59,10 +57,9 @@ passport.use('local-signin',
     )
 );
 
-// Use the LocalStrategy within Passport to register/"signup" users.
 passport.use('local-signup',
     new LocalStrategy(
-        {passReqToCallback: true}, //allows us to pass back the request to the callback
+        {passReqToCallback: true},
         function (req, username, password, done) {
             db.register(username, password)
                 .then(function (user) {
@@ -73,7 +70,7 @@ passport.use('local-signup',
                     }
                     if (!user) {
                         console.log("COULD NOT REGISTER");
-                        req.session.error = 'That username is already in use, please try a different one.'; //inform user could not log them in
+                        req.session.error = 'That username is already in use, please try a different one.';
                         done(null, user);
                     }
                 })
@@ -114,7 +111,7 @@ app.use(function (req, res, next) {
 
 // Configure express to use handlebars templates
 var hbs = exphbs.create({
-    defaultLayout: 'main', //we will be creating this layout shortly
+    defaultLayout: 'main',
 });
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
@@ -156,16 +153,21 @@ app.post('/newRecipe', function (req, res) {
 });
 
 app.post('/updateRecipe', function (req, res) {
-    var data = req.body;                                        //---------------------databaza
-    res.send('Hurra zmieniono ' + data.title);
+    var data = req.body;
+    db.updateRecipe(req.user.username, data.id, data.content)
+        .then(function () {
+            res.send('Updated ' + data.title + '!');
+        })
+        .catch(function (error) {
+            res.send('Error: ' + error);
+        });
 });
 
-var chosenId;                                                //-----------------------wybiera się dla wszystkich użytkowników...
 
 app.get('/recipe/:id', function (req, res) {
-    chosenId = req.params.id;
-    //res.redirect('..');                                           //------------------render
-    res.render('home', {user: req.user});
+    var chosenId = req.params.id;
+    console.log(req.user);
+    res.render('recipe', {user: req.user, recipe: req.user.recipes[chosenId], id: req.params.id});
 })
 
 //logs user out of site, deleting them from the session, and returns to homepage
@@ -183,10 +185,10 @@ app.listen(port);
 console.log("listening on " + port + "!");
 
 
-handlebars.registerHelper('ifChosen', function (id, options) {
-    console.log("Chosen id: " + chosenId);
-    if (id === chosenId) {
-        return options.fn(this);
-    }
-    return options.inverse(this);
-});
+// handlebars.registerHelper('ifChosen', function (id, options) {
+//     console.log("Chosen id: " + chosenId);
+//     if (id === chosenId) {
+//         return options.fn(this);
+//     }
+//     return options.inverse(this);
+// });

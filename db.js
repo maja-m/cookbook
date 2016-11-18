@@ -139,3 +139,17 @@ exports.addRecipe = (username, url) => {
             .catch(error => reject(new Error(error)));
     });
 };
+
+exports.updateRecipe = (username, id, content) => {
+    return new Promise((resolve, reject) => {
+        db.update({username: username}, {$set: {['recipes.' + id + '.content']: content}}, (error, numReplaced, upsert) => {
+            if (error || numReplaced == 0) {
+                console.log(`Błąd przy aktualizacji przepisu`);
+                reject(new Error(error));
+            } else {
+                console.log(`Zaktualizowano przepis!`);
+                resolve(upsert);
+            }
+        });
+    })
+};
