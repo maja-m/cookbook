@@ -149,6 +149,10 @@ app.post('/newRecipe', function (req, res) {
     db.addRecipe(name, url).then(function () {
         req.session.success = 'The recipe was successfully added!';
         res.redirect('..');
+    })
+    .catch(function (e) {
+        req.session.error = e.message;
+        res.redirect('..');
     });
 });
 
@@ -162,7 +166,6 @@ app.post('/updateRecipe', function (req, res) {
             res.send('Error: ' + error);
         });
 });
-
 
 app.get('/recipe/:id', function (req, res) {
     var chosenId = req.params.id;
@@ -183,12 +186,3 @@ app.get('/logout', function (req, res) {
 var port = process.env.PORT || 5000; //select your port or let it pull from your .env file
 app.listen(port);
 console.log("listening on " + port + "!");
-
-
-// handlebars.registerHelper('ifChosen', function (id, options) {
-//     console.log("Chosen id: " + chosenId);
-//     if (id === chosenId) {
-//         return options.fn(this);
-//     }
-//     return options.inverse(this);
-// });

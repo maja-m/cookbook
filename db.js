@@ -3,6 +3,7 @@
 const request = require('request-promise');
 const bcrypt = require('bcryptjs');
 const Datastore = require('nedb');
+const htmlToText = require('html-to-text');
 const db = new Datastore({filename: 'cookbook.db', autoload: true});
 db.persistence.setAutocompactionInterval(5000);
 
@@ -121,19 +122,27 @@ exports.addRecipe = (username, url) => {
     return new Promise((resolve, reject) => {
         request(options)
             .then(data => {
-                if (data && data.errorMessage)
-                    reject(new Error(data.errorMessage));
+                if (data && data.errorMessage) {
+                    console.log('jesteśmy w errorze');
+                    reject(new Error(data.errorMessage));}
                 else {
-                    let id = new Date().getTime();
-                    db.update({username: username}, {$set: {['recipes.' + id]: data}}, (error, numReplaced, upsert) => {
-                        if (error || numReplaced == 0) {
-                            console.log(`Błąd przy dodawaniu przepisu`);
-                            reject(new Error(error));
-                        } else {
-                            console.log(`Dodano przepis: ${data.title}`);
-                            resolve(upsert);
-                        }
-                    });
+                    if (data && data.content && htmlToText.fromString(data.content).trim()) {
+                        console.log('jesteśmy w ifie');
+                        let id = new Date().getTime();
+                        db.update({username: username}, {$set: {['recipes.' + id]: data}}, (error, numReplaced, upsert) => {
+                            if (error || numReplaced == 0) {
+                                console.log(`Błąd przy dodawaniu przepisu`);
+                                reject(new Error(error));
+                            } else {
+                                console.log(`Dodano przepis: ${data.title}`);
+                                resolve(upsert);
+                            }
+                        });
+                    }
+                    else {  //not
+                        console.log('jesteśmy w elsie');
+                        reject(new Error('Sorry, unable to parse the recipe. Try using the manual option.'));
+                    }
                 }
             })
             .catch(error => reject(new Error(error)));
