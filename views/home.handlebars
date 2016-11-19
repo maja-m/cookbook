@@ -1,8 +1,5 @@
 <!-- views/home.handlebars -->
 {{#if user}}
-  <div class="jumbotron">
-    <h1>{{user.username}}'s cookbook</h1>
-  </div>
   <div class="panel panel-default">
     <div class="panel-heading">
       <h3 class="panel-title">Profile Information</h3>
@@ -22,6 +19,7 @@
             <input type="text" id="recipeUri" name="recipeUri" class="form-control" placeholder="Enter the recipe's URI" />
               <button type="submit" class="btn btn-primary">Add</button>
         </form>
+        <a class="btn btn-primary" href="/createRecipe">Add a recipe manually</a>
       </div>
     </div>
   </div>

@@ -123,11 +123,9 @@ exports.addRecipe = (username, url) => {
         request(options)
             .then(data => {
                 if (data && data.errorMessage) {
-                    console.log('jesteśmy w errorze');
                     reject(new Error(data.errorMessage));}
                 else {
                     if (data && data.content && htmlToText.fromString(data.content).trim()) {
-                        console.log('jesteśmy w ifie');
                         let id = new Date().getTime();
                         db.update({username: username}, {$set: {['recipes.' + id]: data}}, (error, numReplaced, upsert) => {
                             if (error || numReplaced == 0) {
@@ -139,8 +137,7 @@ exports.addRecipe = (username, url) => {
                             }
                         });
                     }
-                    else {  //not
-                        console.log('jesteśmy w elsie');
+                    else {
                         reject(new Error('Sorry, unable to parse the recipe. Try using the manual option.'));
                     }
                 }
@@ -149,9 +146,17 @@ exports.addRecipe = (username, url) => {
     });
 };
 
-exports.updateRecipe = (username, id, content) => {
+exports.updateRecipe = (username, id, content, title, lead_image_url) => {
     return new Promise((resolve, reject) => {
-        db.update({username: username}, {$set: {['recipes.' + id + '.content']: content}}, (error, numReplaced, upsert) => {
+        let changes = {};
+        changes['recipes.' + id + '.content'] = content;
+        if (title) {
+            changes['recipes.' + id + '.title'] = title;
+        }
+        if (lead_image_url) {
+            changes['recipes.' + id + '.lead_image_url'] = lead_image_url;
+        }
+        db.update({username: username}, {$set: changes}, (error, numReplaced, upsert) => {
             if (error || numReplaced == 0) {
                 console.log(`Błąd przy aktualizacji przepisu`);
                 reject(new Error(error));

@@ -156,9 +156,13 @@ app.post('/newRecipe', function (req, res) {
     });
 });
 
+app.get('/createRecipe', function (req, res) {
+    res.render('create', {user: req.user});
+});
+
 app.post('/updateRecipe', function (req, res) {
     var data = req.body;
-    db.updateRecipe(req.user.username, data.id, data.content)
+    db.updateRecipe(req.user.username, data.id, data.content, data.title, data.lead_image_url)
         .then(function () {
             res.send('Updated ' + data.title + '!');
         })

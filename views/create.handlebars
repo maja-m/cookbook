@@ -5,19 +5,10 @@
       <h3 class="panel-title">Profile Information</h3>
     </div>
     <div class="panel-body">
-      <p>Username: {{user.username}}</p>
-      <p>Avatar: <img src="{{user.avatar}}"/></p>
-      Recipes:
-      <ul id = "recipesList" class="recipesList">
-        {{#each user.recipes}}
-          <a href="/recipe/{{@key}}"><li id={{url}} >{{title}}</li></a>
-        {{/each}}
-      </ul>
-      <button id="edit" class="btn btn-primary" onclick="edit()" type="button">Edit</button>
-      <button id="save" class="btn btn-primary" onclick="save()" type="button" style="display:none;">Save</button>
-      <h2 id="title">{{recipe.title}}</h2>
-      <div id="content" class="click2edit">{{{recipe.content}}}</div>
-      <div id="id">{{id}}</div>
+        <button id="saveNew" class="btn btn-primary btn-lg" onclick="saveNew()" type="button">Save</button>
+        <input type="text" id="newTitle" class="form-control" placeholder="Enter title" />
+        <input type="text" id="newPicture" class="form-control" placeholder="Enter main picture's URI" />
+        <div id="newContent" class="summernote"></div>
     </div>
   </div>
 

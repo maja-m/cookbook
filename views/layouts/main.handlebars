@@ -72,6 +72,12 @@
       <p class="alert alert-info">{{notice}}</p>
     {{/if}}
 
+    {{#if user}}
+      <div class="jumbotron">
+        <h1><a href="/">{{user.username}}'s cookbook</a></h1>
+      </div>
+    {{/if}}
+
     <!--where our other templates will insert-->
     {{{body}}}
 
@@ -91,8 +97,14 @@
     <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.css" rel="stylesheet">
     <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.js"></script>
   <script>
+
+    $(document).ready(function() {
+        $('.summernote').summernote({minHeight: 600});
+    });
+
     var editButton = document.getElementById("edit");
     var saveButton = document.getElementById("save");
+    var saveNewButton = document.getElementById("saveNew");
     var $content = $("#content");
     var $id = $("#id").text();;
     var $title = $("#title").text();
@@ -110,6 +122,16 @@
 
         $.post('/updateRecipe', {content: $content.html(), id: $id, title: $title}, function(data, textStatus, xhr) {
             $("#alert").html('<p class="alert alert-success">' + data + '</p>');
+        });
+    };
+
+    var saveNew = function() {
+        var newId = new Date().getTime();
+        var newContent = $("#newContent").summernote('code');
+        var newTitle = $("#newTitle").val();
+        var newPicture = $("#newPicture").val();
+        $.post('/updateRecipe', {content: newContent, id: newId, title: newTitle, lead_image_url: newPicture}, function(data, textStatus, xhr) {
+            location.href = "/";
         });
     };
   </script>
