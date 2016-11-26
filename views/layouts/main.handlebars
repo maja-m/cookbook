@@ -72,12 +72,6 @@
       <p class="alert alert-info">{{notice}}</p>
     {{/if}}
 
-    {{#if user}}
-      <div class="jumbotron">
-        <h1><a href="/">{{user.username}}'s cookbook</a></h1>
-      </div>
-    {{/if}}
-
     <!--where our other templates will insert-->
     {{{body}}}
 
@@ -97,21 +91,33 @@
     <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.css" rel="stylesheet">
     <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.js"></script>
   <script>
+    var onPaste = function (e) {
+        console.log('onpaste');
+        var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+        e.preventDefault();
+        document.execCommand('insertText', false, bufferText);
+    };
 
     $(document).ready(function() {
-        $('.summernote').summernote({minHeight: 600});
+        $('.summernote').summernote({minHeight: 600, callbacks: { onPaste : onPaste}});
     });
+
+    // $('.summernote').on('summernote.paste', function(e) {
+    //   console.log(e);
+    //   $('.summernote').summernote('removeFormat');
+    // });
 
     var editButton = document.getElementById("edit");
     var saveButton = document.getElementById("save");
     var saveNewButton = document.getElementById("saveNew");
+    var deleteRecipeButton = document.getElementById("deleteRecipe");
     var $content = $("#content");
-    var $id = $("#id").text();;
+    var $id = $content.attr('data-id');
     var $title = $("#title").text();
 
     var edit = function() {
         saveButton.style="display:inline;"
-        $('.click2edit').summernote({focus: true});
+        $('.click2edit').summernote({focus: true, onPaste: onPaste});
     };
 
     var save = function() {
@@ -133,6 +139,14 @@
         $.post('/updateRecipe', {content: newContent, id: newId, title: newTitle, lead_image_url: newPicture}, function(data, textStatus, xhr) {
             location.href = "/";
         });
+    };
+
+    var deleteRecipe = function() {
+        if(confirm('Are you sure you want to delete ' + $title + '?')) {
+            $.post('/deleteRecipe', {id: $id}, function(data, textStatus, xhr) {
+                location.href = "/";
+            });
+        }
     };
   </script>
 </body>

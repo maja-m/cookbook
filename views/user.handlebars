@@ -1,0 +1,32 @@
+<!-- views/home.handlebars -->
+<div class="jumbotron">
+<h1><a href="/">{{owner.username}}'s cookbook</a></h1>
+</div>
+
+<div class="panel panel-default">
+<div class="panel-heading">
+  <h3 class="panel-title">Profile Information</h3>
+</div>
+<div class="panel-body">
+  <p>Username: {{owner.username}}</p>
+  <p>Avatar: <img src="{{owner.avatar}}"/></p>
+  Recipes:
+  <ul id = "recipesList" class="recipesList">
+    {{#each owner.recipes}}
+      <a href="/user/{{../../owner.username}}/recipe/{{@key}}"><li id={{url}} >{{title}}</li></a>
+    {{/each}}
+  </ul>
+  <div class="panel-body">
+    <form action="/newRecipe" method="post">
+        <label for="recipeUri">Add a new recipe: </label>
+        <input type="text" id="recipeUri" name="recipeUri" class="form-control" placeholder="Enter the recipe's URI" />
+          <button type="submit" class="btn btn-primary">Add</button>
+    </form>
+    <a class="btn btn-primary" href="/createRecipe">Add a recipe manually</a>
+  </div>
+</div>
+</div>
+
+<!-- include summernote css/js-->
+<link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.css" rel="stylesheet">
+<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.js"></script>

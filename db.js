@@ -43,6 +43,18 @@ let update = (query, data) => {
     });
 };
 
+let remove = (query) => {
+    return new Promise((resolve, reject) => {
+        db.remove(query, {}, (error, numRemoved) => {
+            if (error || !numRemoved) {
+                reject(new Error(error));
+            } else {
+                resolve(numRemoved);
+            }
+        })
+    });
+};
+
 exports.register = (username, password) => {
     let hash = bcrypt.hashSync(password, 8);
     let user = {
@@ -162,6 +174,20 @@ exports.updateRecipe = (username, id, content, title, lead_image_url) => {
                 reject(new Error(error));
             } else {
                 console.log(`Zaktualizowano przepis!`);
+                resolve(upsert);
+            }
+        });
+    })
+};
+
+exports.deleteRecipe = (username, id) => {
+    return new Promise((resolve, reject) => {
+        db.update({username: username}, {$unset: {['recipes.' + id] : true}}, (error, numReplaced, upsert) => {
+            if (error || numReplaced == 0) {
+                console.log(`Błąd przy usuwaniu przepisu`);
+                reject(new Error(error));
+            } else {
+                console.log(`Usunięto przepis!`);
                 resolve(upsert);
             }
         });

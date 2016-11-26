@@ -120,7 +120,29 @@ app.set('view engine', 'handlebars');
 
 //displays our homepage
 app.get('/', function (req, res) {
-    res.render('home', {user: req.user});
+    if (req.user) {
+        res.redirect('/user/' + req.user.username);
+    }
+    else {
+        res.redirect('/signin');
+    }
+    //res.render('home', {user: req.user});
+});
+
+app.get('/user/:username', function (req, res) {
+    if (req.user && req.params.username == req.user.username) {
+        res.render('user', {user: req.user, owner: req.user});
+    }
+    else {
+        db.getUser(req.params.user)
+        .then(function (user) {
+            res.render('user', {user: req.user, owner: user});
+        }).catch(function (error) {
+            console.error(error);
+            res.send(error);
+        });
+    }
+
 });
 
 //displays our signup page
@@ -171,10 +193,26 @@ app.post('/updateRecipe', function (req, res) {
         });
 });
 
-app.get('/recipe/:id', function (req, res) {
+app.post('/deleteRecipe', function (req, res) {
+    var data = req.body;
+    db.deleteRecipe(req.user.username, data.id)
+        .then(function () {
+            res.send('Recipe wa successfully removed!');
+        })
+        .catch(function (error) {
+            res.send('Error: ' + error);
+        });
+});
+
+app.get('/user/:user/recipe/:id', function (req, res) {
     var chosenId = req.params.id;
-    console.log(req.user);
-    res.render('recipe', {user: req.user, recipe: req.user.recipes[chosenId], id: req.params.id});
+    db.getUser(req.params.user)
+    .then(function (user) {
+        res.render('recipe', {user: req.user, recipe: user.recipes[chosenId], id: req.params.id, owner: user});
+    }).catch(function (error) {
+        console.error(error);
+        res.send(error);
+    });
 })
 
 //logs user out of site, deleting them from the session, and returns to homepage
@@ -190,3 +228,11 @@ app.get('/logout', function (req, res) {
 var port = process.env.PORT || 5000; //select your port or let it pull from your .env file
 app.listen(port);
 console.log("listening on " + port + "!");
+
+handlebars.registerHelper('ifLoggedUser', function(username, urlUsername, options) {
+  if(username === urlUsername) {
+    console.log('zgadza się');
+    return options.fn(this);
+  }
+  return options.inverse(this);
+});

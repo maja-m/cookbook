@@ -1,39 +1,34 @@
 <!-- views/home.handlebars -->
-{{#if user}}
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h3 class="panel-title">Profile Information</h3>
-    </div>
-    <div class="panel-body">
-      <p>Username: {{user.username}}</p>
-      <p>Avatar: <img src="{{user.avatar}}"/></p>
-      Recipes:
-      <ul id = "recipesList" class="recipesList">
-        {{#each user.recipes}}
-          <a href="/recipe/{{@key}}"><li id={{url}} >{{title}}</li></a>
-        {{/each}}
-      </ul>
+<div class="jumbotron">
+  <h1><a href="/">{{owner.username}}'s cookbook</a></h1>
+</div>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Profile Information</h3>
+  </div>
+  <div class="panel-body">
+    <p>Username: {{owner.username}}</p>
+    <p>Avatar: <img src="{{owner.avatar}}"/></p>
+    Recipes:
+    <ul id = "recipesList" class="recipesList">
+      {{#each owner.recipes}}
+        <a href="/user/{{../../owner.username}}/recipe/{{@key}}"><li id={{url}} >{{title}}</li></a>
+      {{/each}}
+    </ul>
+    {{#ifLoggedUser user.username owner.username}}
       <button id="edit" class="btn btn-primary" onclick="edit()" type="button">Edit</button>
       <button id="save" class="btn btn-primary" onclick="save()" type="button" style="display:none;">Save</button>
-      <h2 id="title">{{recipe.title}}</h2>
-      <div id="content" class="click2edit">{{{recipe.content}}}</div>
-      <div id="id">{{id}}</div>
+      <button id="deleteRecipe" class="btn btn-primary" onclick="deleteRecipe()" type="button">Delete</button>
+    {{/ifLoggedUser}}
+    <h2 id="title">{{recipe.title}}</h2>
+    {{#if recipe.domain}}
+      <h4 id="domain">Source: {{recipe.domain}}</h4>
+    {{/if}}
+    <div style="position:relative;">
+      <div id="content" class="click2edit" data-id="{{id}}">{{{recipe.content}}}</div>
     </div>
   </div>
-
-{{else}}
-  <div class="jumbotron">
-    <h1>Cookbook</h1>
-    <p>Sign in and view your profile!</p>
-    <p>
-      <a href="/signin" class="btn btn-primary btn-lg" role="button">
-        <span class="glyphicon glyphicon-user"></span>
-        Sign in!
-      </a>
-    </p>
-  </div>
-
-{{/if}}
+</div>
 
 <!-- include summernote css/js-->
 <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.css" rel="stylesheet">
