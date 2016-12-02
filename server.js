@@ -134,8 +134,9 @@ app.get('/user/:username', function (req, res) {
         res.render('user', {user: req.user, owner: req.user});
     }
     else {
-        db.getUser(req.params.user)
+        db.getUser(req.params.username)
         .then(function (user) {
+            console.log('coś wcześniej' + user);
             res.render('user', {user: req.user, owner: user});
         }).catch(function (error) {
             console.error(error);
@@ -213,7 +214,7 @@ app.get('/user/:user/recipe/:id', function (req, res) {
         console.error(error);
         res.send(error);
     });
-})
+});
 
 //logs user out of site, deleting them from the session, and returns to homepage
 app.get('/logout', function (req, res) {
@@ -225,7 +226,7 @@ app.get('/logout', function (req, res) {
 });
 
 //===============PORT=================
-var port = process.env.PORT || 5000; //select your port or let it pull from your .env file
+let port = process.env.PORT || 5000; //select your port or let it pull from your .env file
 app.listen(port);
 console.log("listening on " + port + "!");
 

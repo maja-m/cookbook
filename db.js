@@ -116,8 +116,8 @@ exports.getUser = (username) => {
             .then(function (user) {
                 resolve(user);
             })
-            .catch(function (error) {
-                reject(new Error(err));
+            .catch(function (err) {
+                reject(err);
             });
     });
 };

@@ -13,9 +13,10 @@
   Recipes:
   <ul id = "recipesList" class="recipesList">
     {{#each owner.recipes}}
-      <a href="/user/{{../../owner.username}}/recipe/{{@key}}"><li id={{url}} >{{title}}</li></a>
+      <a href="/user/{{../owner.username}}/recipe/{{@key}}"><li id={{url}} >{{title}}</li></a>
     {{/each}}
   </ul>
+{{#ifLoggedUser user.username owner.username}}
   <div class="panel-body">
     <form action="/newRecipe" method="post">
         <label for="recipeUri">Add a new recipe: </label>
@@ -24,6 +25,7 @@
     </form>
     <a class="btn btn-primary" href="/createRecipe">Add a recipe manually</a>
   </div>
+{{/ifLoggedUser}}
 </div>
 </div>
 

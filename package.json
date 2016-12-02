@@ -4,7 +4,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "concurrently --kill-others \"nodemon server.js\" \"browser-sync start --proxy localhost:5000 --files views\""
   },
   "dependencies": {
     "bcryptjs": "^0.7.12",
@@ -26,6 +26,8 @@
     "request-promise": "^4.1.1"
   },
   "devDependencies": {
+    "browser-sync": "^2.18.2",
+    "concurrently": "^3.1.0",
     "nodemon": "^1.11.0"
   }
 }
