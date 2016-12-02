@@ -194,6 +194,17 @@ app.post('/updateRecipe', function (req, res) {
         });
 });
 
+app.post('/updateStars', function (req, res) {
+    let data = req.body;
+    db.updateStars(data.value, data.id, data.owner)
+        .then(function () {
+            res.send('Rating updated!');
+        })
+        .catch(function (error) {
+            res.send('Error: ' + error);
+        });
+});
+
 app.post('/deleteRecipe', function (req, res) {
     var data = req.body;
     db.deleteRecipe(req.user.username, data.id)

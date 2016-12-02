@@ -135,7 +135,8 @@ exports.addRecipe = (username, url) => {
         request(options)
             .then(data => {
                 if (data && data.errorMessage) {
-                    reject(new Error(data.errorMessage));}
+                    reject(new Error(data.errorMessage));
+                }
                 else {
                     if (data && data.content && htmlToText.fromString(data.content).trim()) {
                         let id = new Date().getTime();
@@ -182,7 +183,7 @@ exports.updateRecipe = (username, id, content, title, lead_image_url) => {
 
 exports.deleteRecipe = (username, id) => {
     return new Promise((resolve, reject) => {
-        db.update({username: username}, {$unset: {['recipes.' + id] : true}}, (error, numReplaced, upsert) => {
+        db.update({username: username}, {$unset: {['recipes.' + id]: true}}, (error, numReplaced, upsert) => {
             if (error || numReplaced == 0) {
                 console.log(`Błąd przy usuwaniu przepisu`);
                 reject(new Error(error));
@@ -191,5 +192,38 @@ exports.deleteRecipe = (username, id) => {
                 resolve(upsert);
             }
         });
+    })
+};
+
+exports.updateStars = (value, id, username) => {
+    return new Promise((resolve, reject) => {
+        exports.getUser(username)
+            .then(function (user) {
+                let oldValue = parseFloat(user.recipes[id].stars);
+                let votesCount = parseInt(user.recipes[id].votes) || 0;
+
+                let newValue = oldValue
+                    ? (oldValue * votesCount + parseInt(value)) / (votesCount + 1)
+                    : value;
+                let newVotesCount = votesCount + 1;
+                //ternary operator; jeśli istnieje oldValue to newValue = pierwsza linijka, jeśli nie, to druga
+
+                let changes = {};
+                changes['recipes.' + id + '.stars'] = newValue;
+                changes['recipes.' + id + '.votes'] = newVotesCount;
+
+                db.update({username: username}, {$set: changes}, (error, numReplaced, upsert) => {
+                    if (error || numReplaced == 0) {
+                        console.log(`Błąd przy aktualizacji oceny`);
+                        reject(new Error(error));
+                    } else {
+                        console.log(`Zaktualizowano ocenę!`);
+                        resolve(upsert);
+                    }
+                });
+            })
+            .catch(function (error) {
+                reject(new Error(error));
+            });
     })
 };
