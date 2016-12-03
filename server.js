@@ -198,7 +198,7 @@ app.post('/updateStars', function (req, res) {
     let data = req.body;
     db.updateStars(data.value, data.id, data.owner)
         .then(function () {
-            res.send('Rating updated!');
+            res.send('Your vote has been saved!');
         })
         .catch(function (error) {
             res.send('Error: ' + error);

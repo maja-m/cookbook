@@ -203,7 +203,7 @@ exports.updateStars = (value, id, username) => {
                 let votesCount = parseInt(user.recipes[id].votes) || 0;
 
                 let newValue = oldValue
-                    ? (oldValue * votesCount + parseInt(value)) / (votesCount + 1)
+                    ? (oldValue * votesCount + parseFloat(value)) / (votesCount + 1)
                     : value;
                 let newVotesCount = votesCount + 1;
                 //ternary operator; jeśli istnieje oldValue to newValue = pierwsza linijka, jeśli nie, to druga
@@ -217,7 +217,6 @@ exports.updateStars = (value, id, username) => {
                         console.log(`Błąd przy aktualizacji oceny`);
                         reject(new Error(error));
                     } else {
-                        console.log(`Zaktualizowano ocenę!`);
                         resolve(upsert);
                     }
                 });
