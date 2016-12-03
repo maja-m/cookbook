@@ -23,6 +23,8 @@
     <h2 id="title">{{recipe.title}}</h2>
     <label for="stars" id="stars-label" class="control-label"></label>
     <input id="stars" {{#if recipe.stars}}value="{{recipe.stars}}" {{/if}} />
+    <label for="tags" id="tags-label" class="control-label">Tags: </label>
+    <input id="tags" data-role="tagsinput"/>
     {{#if recipe.domain}}
       <h4 id="domain">Source: {{recipe.domain}}</h4>
     {{/if}}
@@ -42,5 +44,3 @@
   </script>
   <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 </div>
-
-

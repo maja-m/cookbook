@@ -226,3 +226,56 @@ exports.updateStars = (value, id, username) => {
             });
     })
 };
+
+exports.addTags = (value, id, username) => {
+    return new Promise((resolve, reject) => {
+        exports.getUser(username)
+            .then(function (user) {
+                let oldTags = user.recipes[id].tags || "";
+
+                let newTags = oldTags
+                    ? oldTags + value + ","
+                    : value + ",";
+
+                let changes = {};
+                changes['recipes.' + id + '.tags'] = newTags;
+
+                db.update({username: username}, {$set: changes}, (error, numReplaced, upsert) => {
+                    if (error || numReplaced == 0) {
+                        console.log(`Błąd przy aktualizacji tagów`);
+                        reject(new Error(error));
+                    } else {
+                        resolve(upsert);
+                    }
+                });
+            })
+            .catch(function (error) {
+                reject(new Error(error));
+            });
+    })
+};
+
+exports.removeTags = (value, id, username) => {
+    return new Promise((resolve, reject) => {
+        exports.getUser(username)
+            .then(function (user) {
+                let tags = user.recipes[id].tags;
+                tags = tags.replace(value + ",", '');
+
+                let changes = {};
+                changes['recipes.' + id + '.tags'] = tags;
+
+                db.update({username: username}, {$set: changes}, (error, numReplaced, upsert) => {
+                    if (error || numReplaced == 0) {
+                        console.log(`Błąd przy aktualizacji tagów`);
+                        reject(new Error(error));
+                    } else {
+                        resolve(upsert);
+                    }
+                });
+            })
+            .catch(function (error) {
+                reject(new Error(error));
+            });
+    })
+};

@@ -205,6 +205,28 @@ app.post('/updateStars', function (req, res) {
         });
 });
 
+app.post('/addTags', function (req, res) {
+    let data = req.body;
+    db.addTags(data.value, data.id, data.owner)
+        .then(function () {
+            res.send('The tag has been added!');
+        })
+        .catch(function (error) {
+            res.send('Error: ' + error);
+        });
+});
+
+app.post('/removeTags', function (req, res) {
+    let data = req.body;
+    db.removeTags(data.value, data.id, data.owner)
+        .then(function () {
+            res.send('The tag has been removed!');
+        })
+        .catch(function (error) {
+            res.send('Error: ' + error);
+        });
+});
+
 app.post('/deleteRecipe', function (req, res) {
     var data = req.body;
     db.deleteRecipe(req.user.username, data.id)
