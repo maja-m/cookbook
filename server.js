@@ -9,6 +9,7 @@ var express = require('express'),
     session = require('express-session'),
     passport = require('passport'),
     handlebars = require('handlebars'),
+    sassMiddleware = require('node-sass-middleware'),
     LocalStrategy = require('passport-local');
 
 var db = require('./db.js');
@@ -91,6 +92,18 @@ app.use(methodOverride('X-HTTP-Method-Override'));
 app.use(session({secret: 'supernova', saveUninitialized: true, resave: true}));
 app.use(passport.initialize());
 app.use(passport.session());
+
+//sass
+app.use('/assets', sassMiddleware({
+    /* Options */
+    src: 'sass',
+    dest: 'assets',
+    debug: true,
+    outputStyle: 'extended',
+    log: (severity, key, value) => console.log(`[node-sass-middleware] ${severity}: ${key} => ${value}`)
+}));
+// Note: you must place sass-middleware *before* `express.static` or else it will not work.
+app.use('/assets', express.static('assets'));
 
 // Session-persisted message middleware
 app.use(function (req, res, next) {

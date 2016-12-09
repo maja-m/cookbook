@@ -11,11 +11,17 @@
   <p>Username: {{owner.username}}</p>
   <p>Avatar: <img src="{{owner.avatar}}"/></p>
   Recipes:
-  <ul id = "recipesList" class="recipesList">
+  <div id="recipesList" class="recipesList row">
     {{#each owner.recipes}}
-      <a href="/user/{{../owner.username}}/recipe/{{@key}}"><li id={{url}} >{{title}}</li></a>
+      <div class="col-sm-4">
+        <a id="{{url}}" href="/user/{{../owner.username}}/recipe/{{@key}}">
+          <div style="background-image: url('{{lead_image_url}}');">
+            <div>{{title}}</div>
+          </div>
+        </a>
+      </div>
     {{/each}}
-  </ul>
+  </div>
 {{#ifLoggedUser user.username owner.username}}
   <div class="panel-body">
     <form action="/newRecipe" method="post">
