@@ -20,9 +20,9 @@
       <!--{{/each}}-->
     <!--</ul>-->
     {{#ifLoggedUser user.username owner.username}}
-      <button id="edit" class="btn btn-primary" onclick="edit()" type="button">Edit</button>
-      <button id="save" class="btn btn-primary" onclick="save()" type="button" style="display:none;">Save</button>
-      <button id="deleteRecipe" class="btn btn-primary" onclick="deleteRecipe()" type="button">Delete</button>
+      <button id="edit" class="btn btn-primary" onclick="edit()" type="button"><span class="glyphicon glyphicon-pencil"></span>Edit</button>
+      <button id="save" class="btn btn-primary" onclick="save()" type="button" style="display:none;"><span class="glyphicon glyphicon-ok"></span>Save</button>
+      <button id="deleteRecipe" class="btn btn-primary" onclick="deleteRecipe()" type="button"><span class="glyphicon glyphicon-remove"></span>Delete</button>
     {{/ifLoggedUser}}
     <h2 id="title">{{recipe.title}}</h2>
     <label for="stars" id="stars-label" class="control-label"></label>
