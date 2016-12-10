@@ -104,6 +104,7 @@ app.use('/assets', sassMiddleware({
 }));
 // Note: you must place sass-middleware *before* `express.static` or else it will not work.
 app.use('/assets', express.static('assets'));
+app.use('/vendor/fonts', express.static('node_modules/bootstrap-sass/assets/fonts/bootstrap'));
 
 // Session-persisted message middleware
 app.use(function (req, res, next) {
@@ -142,15 +143,14 @@ app.get('/', function (req, res) {
     //res.render('home', {user: req.user});
 });
 
-app.get('/user/:username', function (req, res) {
+app.get('/user/:username/:tag?', function (req, res) {
     if (req.user && req.params.username == req.user.username) {
-        res.render('user', {user: req.user, owner: req.user});
+        res.render('user', {user: req.user, owner: req.user, tag: req.params.tag});
     }
     else {
         db.getUser(req.params.username)
         .then(function (user) {
-            console.log('coś wcześniej' + user);
-            res.render('user', {user: req.user, owner: user});
+            res.render('user', {user: req.user, owner: user, tag: req.params.tag});
         }).catch(function (error) {
             console.error(error);
             res.send(error);
@@ -277,9 +277,49 @@ app.listen(port);
 console.log("listening on " + port + "!");
 
 handlebars.registerHelper('ifLoggedUser', function(username, urlUsername, options) {
-  if(username === urlUsername) {
-    console.log('zgadza się');
-    return options.fn(this);
-  }
-  return options.inverse(this);
+    if(username === urlUsername) {
+        console.log('zgadza się');
+        return options.fn(this);
+    }
+    return options.inverse(this);
+});
+
+handlebars.registerHelper('getTags', function(recipes, username='.') {
+    let tagSet = new Set();
+    for(let i in recipes) {
+        let recipe = recipes[i];
+        if (recipe.tags) {
+            let tags = recipe.tags.toString().split(",");
+            for(let j in tags) {
+                let tag = tags[j];
+                if (tag) {
+                    tagSet.add(tag);
+                }
+            }
+        }
+    }
+    console.log(tagSet);
+    let tagList = '';
+    for(let tag of tagSet) {
+        tagList += `<li><a href="/user/${username}/${tag}">${tag}</a></li>`;
+    }
+    return tagList;
+});
+
+handlebars.registerHelper('tagFilter', function(recipe, chosenTag, options) {
+    if (!chosenTag) {
+        return options.fn(this);
+    }
+    if (recipe.tags) {
+        let tags = recipe.tags.toString().split(",");
+        for(let j in tags) {
+            let tag = tags[j];
+            if (tag) {
+                if (tag == chosenTag) {
+                    return options.fn(this);
+                }
+            }
+        }
+    }
+    return options.inverse(this);
 });

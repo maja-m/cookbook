@@ -1,4 +1,17 @@
+$brand-primary: #999;
+$input-border-focus:#999;
+$brand-info:#999;
+
+* {
+    outline: none !important;
+}
+
+$icon-font-path: '/vendor/fonts/';
+@import "../node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+
 #recipesList {
+    padding: 2*$padding-base-horizontal $padding-base-horizontal;
+
     div {
         padding: 0;
     }
@@ -33,4 +46,22 @@
             }
         }
     }
+}
+
+.main-avatar {
+    max-width: 100px;
+    border-radius: 100%;
+}
+
+a {
+    color: #555;
+
+    &:hover {
+        color: #555;
+        text-decoration: none;
+    }
+}
+
+.new-recipe-form {
+    text-align: right;
 }

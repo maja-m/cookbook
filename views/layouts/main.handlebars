@@ -11,8 +11,7 @@
   <title>User Authentication</title>
 
   <!-- Latest compiled and minified CSS -->
-  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-  <link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.css" rel="stylesheet">
+  <!--<link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.css" rel="stylesheet">-->
   <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-star-rating/4.0.1/css/star-rating.css" media="all" rel="stylesheet" type="text/css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.css" />
@@ -44,14 +43,16 @@
               {{#if user}}
                 <p class="navbar-text">
                   <strong>Hi,</strong>
-                  <img src="{{user.avatar}}" width="20" height="20">
-                  {{user.username}}
+                  <a href="/user/{{user.username}}">
+                    <img src="{{user.avatar}}" class="img-circle" width="20" height="20">
+                    {{user.username}}
+                  </a>
                 </p>
                 </li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                   <li>
-                    <a href="/logout">Log Out</a>
+                    <a href="/logout">Log out</a>
                   </li>
               {{else}}
                 <a href="/signin">Sign In</a>

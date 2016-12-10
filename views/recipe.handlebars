@@ -1,20 +1,24 @@
 <!-- views/home.handlebars -->
 <div class="jumbotron">
-  <h1><a href="/">{{owner.username}}'s cookbook</a></h1>
+  <h1>
+    <a class="header" href="/user/{{owner.username}}">
+      <div>
+        <img class="main-avatar" src="{{owner.avatar}}"/>
+        {{owner.username}}'s cookbook
+      </div>
+    </a>
+  </h1>
 </div>
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title">Profile Information</h3>
+    <h3 class="panel-title"></h3>
   </div>
   <div class="panel-body">
-    <p>Username: {{owner.username}}</p>
-    <p>Avatar: <img src="{{owner.avatar}}"/></p>
-    Recipes:
-    <ul id = "recipesList" class="recipesList">
-      {{#each owner.recipes}}
-        <a href="/user/{{../owner.username}}/recipe/{{@key}}"><li id={{url}} >{{title}}</li></a>
-      {{/each}}
-    </ul>
+    <!--<ul id = "recipesList" class="recipesList">-->
+      <!--{{#each owner.recipes}}-->
+        <!--<a href="/user/{{../owner.username}}/recipe/{{@key}}"><li id={{url}} >{{title}}</li></a>-->
+      <!--{{/each}}-->
+    <!--</ul>-->
     {{#ifLoggedUser user.username owner.username}}
       <button id="edit" class="btn btn-primary" onclick="edit()" type="button">Edit</button>
       <button id="save" class="btn btn-primary" onclick="save()" type="button" style="display:none;">Save</button>
