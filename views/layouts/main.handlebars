@@ -44,8 +44,11 @@
                 <p class="navbar-text">
                   <strong>Hi,</strong>
                   <a href="/user/{{user.username}}">
-                    <img src="{{user.avatar}}" class="img-circle" width="20" height="20">
+                    <img src="/uploads/{{user.avatar}}" class="img-circle" width="20" height="20">
                     {{user.username}}
+                  </a>
+                  <a href="/settings">
+                    <strong><span onclick="settings()" class="glyphicon glyphicon-cog" style="padding-left: 0.5em; padding-right: 0.5em"></strong>
                   </a>
                 </p>
                 </li>
@@ -151,6 +154,20 @@
                   location.href = "/";
               });
           }
+      };
+      
+      var validatePassword = function () {
+        var newPassword = document.getElementById("newPassword1");
+        var repeatedPassword = document.getElementById("newPassword2");
+        var form = document.getElementById("updatePassword");
+        var helpBlock = document.getElementById("helpBlock");
+
+        if (newPassword.value !== repeatedPassword.value) {
+          form.classList.add("has-error");
+          helpBlock.classList.remove("hidden");
+          return false;
+        }
+        return true;
       };
   
       var hasVoted = Cookies.get(cookieName);

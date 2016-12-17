@@ -122,6 +122,41 @@ exports.getUser = (username) => {
     });
 };
 
+exports.updateAvatar = (username, path) => {
+    return new Promise((resolve, reject) => {
+        let changes = {};
+        changes['avatar'] = path;
+
+        db.update({username: username}, {$set: changes}, (error, numReplaced, upsert) => {
+            if (error || numReplaced == 0) {
+                console.log(`Błąd przy aktualizacji avatara`);
+                reject(new Error(error));
+            } else {
+                console.log(`Zaktualizowano avatar!`);
+                resolve(upsert);
+            }
+        });
+    })
+};
+
+exports.updatePassword = (username, newPassword) => {
+    return new Promise((resolve, reject) => {
+        let hash = bcrypt.hashSync(newPassword, 8);
+        let changes = {};
+        changes['password'] = hash;
+
+        db.update({username: username}, {$set: changes}, (error, numReplaced, upsert) => {
+            if (error || numReplaced == 0) {
+                console.log(`Błąd przy aktualizacji hasła`);
+                reject(new Error(error));
+            } else {
+                console.log(`Zaktualizowano hasło!`);
+                resolve(upsert);
+            }
+        });
+    })
+};
+
 exports.addRecipe = (username, url) => {
     let options = {
         uri: 'https://mercury.postlight.com/parser?url=' + url,

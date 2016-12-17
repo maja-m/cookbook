@@ -10,7 +10,20 @@ var express = require('express'),
     passport = require('passport'),
     handlebars = require('handlebars'),
     sassMiddleware = require('node-sass-middleware'),
-    LocalStrategy = require('passport-local');
+    LocalStrategy = require('passport-local'),
+    multer  = require('multer');
+
+var storage =   multer.diskStorage({
+    destination: function (req, file, callback) {
+        callback(null, './uploads');
+    },
+    filename: function (req, file, callback) {
+        let extension = file.originalname.split('.').pop();
+        let filename = extension ? `${req.user.username}.${extension}` : req.user.username;
+        callback(null, filename);
+    }
+});
+var upload = multer({ storage : storage}).single('userPhoto');
 
 var db = require('./db.js');
 
@@ -104,6 +117,7 @@ app.use('/assets', sassMiddleware({
 }));
 // Note: you must place sass-middleware *before* `express.static` or else it will not work.
 app.use('/assets', express.static('assets'));
+app.use('/uploads', express.static('uploads'));
 app.use('/vendor/fonts', express.static('node_modules/bootstrap-sass/assets/fonts/bootstrap'));
 
 // Session-persisted message middleware
@@ -251,6 +265,36 @@ app.post('/deleteRecipe', function (req, res) {
         });
 });
 
+app.get('/settings', function (req, res) {
+    res.render('settings', {user: req.user, owner: req.user});
+});
+
+app.post('/uploadAvatar', function(req,res){
+    upload(req,res,function(err) {
+        if(err) {
+            return res.end("Error uploading file.");
+        }
+        db.updateAvatar(req.user.username, req.file.filename)
+            .then(function () {
+                res.redirect('/settings');
+            })
+            .catch(function (error) {
+                res.send('Error: ' + error);
+            });
+    });
+});
+
+app.post('/updatePassword', function(req,res){
+    db.updatePassword(req.user.username, req.body.newPassword1)
+        .then(function () {
+            req.session.success = 'Password was successfully changed!';
+            res.redirect('/settings');
+        })
+        .catch(function (error) {
+            res.send('Error: ' + error);
+        });
+});
+
 app.get('/user/:user/recipe/:id', function (req, res) {
     var chosenId = req.params.id;
     db.getUser(req.params.user)
@@ -265,7 +309,7 @@ app.get('/user/:user/recipe/:id', function (req, res) {
 //logs user out of site, deleting them from the session, and returns to homepage
 app.get('/logout', function (req, res) {
     var name = req.user.username;
-    console.log("LOGGIN OUT " + req.user.username)
+    console.log("LOGGING OUT " + req.user.username);
     req.logout();
     res.redirect('/');
     req.session.notice = "You have successfully been logged out " + name + "!";
