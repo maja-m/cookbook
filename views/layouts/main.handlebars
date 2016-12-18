@@ -82,23 +82,33 @@
       var id = $content.attr('data-id');
       var $title = $("#title").text();
       var cookieName = '{{owner.username}}-' + id;
+      var changeForm = document.getElementById("changeForm");
   
       var edit = function() {
           saveButton.style="display:inline;";
         cancelButton.style="display:inline;";
+        changeForm.style="display:inline;";
           $('.click2edit').summernote({focus: true, onPaste: onPaste});
       };
   
       var save = function() {
           saveButton.style="display:none;";
         cancelButton.style="display:none;";
+        changeForm.style="display:none;";
   
           var makrup = $('.click2edit').summernote('code');
           $('.click2edit').summernote('destroy');
-  
-          $.post('/updateRecipe', {content: $content.html(), id: id, title: $title}, function(data, textStatus, xhr) {
+
+          var newTitle = document.getElementById("changeForm-title");
+          newTitle = newTitle.value;
+          
+          var picture = document.getElementById("changeForm-picture");
+          picture = picture.value;
+          
+          $.post('/updateRecipe', {content: $content.html(), id: id, title: $title, newTitle: newTitle, picture: picture}, function(data, textStatus, xhr) {
               $("#alert").html('<p class="alert alert-success">' + data + '</p>');
           });
+        location.reload();
       };
 
       var cancel = function() {
@@ -109,23 +119,21 @@
         $('.click2edit').summernote('destroy');
         location.reload();
       };
-  
+
       var saveNew = function() {
           var newId = new Date().getTime();
           var newContent = $("#newContent").summernote('code');
           var newTitle = $("#newTitle").val();
           var newPicture = $("#newPicture").val();
-          $.post('/updateRecipe', {content: newContent, id: newId, title: newTitle, lead_image_url: newPicture}, function(data, textStatus, xhr) {
+          $.post('/createRecipe', {content: newContent, id: newId, title: newTitle, lead_image_url: newPicture}, function(data, textStatus, xhr) {
               location.href = "/";
           });
       };
   
       var deleteRecipe = function() {
-          if(confirm('Are you sure you want to delete ' + $title + '?')) {
-              $.post('/deleteRecipe', {id: id}, function(data, textStatus, xhr) {
-                  location.href = "/";
-              });
-          }
+          $.post('/deleteRecipe', {id: id}, function(data, textStatus, xhr) {
+              location.href = "/";
+          });
       };
       
       var validatePassword = function () {

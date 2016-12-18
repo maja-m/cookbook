@@ -212,7 +212,18 @@ app.get('/createRecipe', function (req, res) {
 
 app.post('/updateRecipe', function (req, res) {
     var data = req.body;
-    db.updateRecipe(req.user.username, data.id, data.content, data.title, data.lead_image_url)
+    db.updateRecipe(req.user.username, data.id, data.content, data.title, data.newTitle, data.picture)
+        .then(function () {
+            res.send('Updated ' + data.title + '!');
+        })
+        .catch(function (error) {
+            res.send('Error: ' + error);
+        });
+});
+
+app.post('/createRecipe', function (req, res) {
+    var data = req.body;
+    db.createRecipe(req.user.username, data.id, data.content, data.title, data.lead_image_url)
         .then(function () {
             res.send('Updated ' + data.title + '!');
         })

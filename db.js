@@ -60,7 +60,7 @@ exports.register = (username, password) => {
     let user = {
         "username": username,
         "password": hash,
-        "avatar": ""
+        "avatar": "default-user.png"
     };
 
     return new Promise((resolve, reject) => {
@@ -174,6 +174,8 @@ exports.addRecipe = (username, url) => {
                 }
                 else {
                     if (data && data.content && htmlToText.fromString(data.content).trim()) {
+                        if(!data.lead_image_url)
+                            data.lead_image_url = '/uploads/recipe-default.jpg';
                         let id = new Date().getTime();
                         db.update({username: username}, {$set: {['recipes.' + id]: data}}, (error, numReplaced, upsert) => {
                             if (error || numReplaced == 0) {
@@ -194,16 +196,41 @@ exports.addRecipe = (username, url) => {
     });
 };
 
-exports.updateRecipe = (username, id, content, title, lead_image_url) => {
+exports.updateRecipe = (username, id, content, title, newTitle, picture) => {
     return new Promise((resolve, reject) => {
         let changes = {};
         changes['recipes.' + id + '.content'] = content;
-        if (title) {
+        if (newTitle) {
+            changes['recipes.' + id + '.title'] = newTitle;
+        }
+        if (picture) {
+            changes['recipes.' + id + '.lead_image_url'] = picture;
+        }
+        db.update({username: username}, {$set: changes}, (error, numReplaced, upsert) => {
+            if (error || numReplaced == 0) {
+                console.log(`Błąd przy aktualizacji przepisu`);
+                reject(new Error(error));
+            } else {
+                console.log(`Zaktualizowano przepis!`);
+                resolve(upsert);
+            }
+        });
+    })
+};
+
+exports.createRecipe = (username, id, content, title, lead_image_url) => {
+    return new Promise((resolve, reject) => {
+        let changes = {};
+        changes['recipes.' + id + '.content'] = content;
+        if (title)
             changes['recipes.' + id + '.title'] = title;
-        }
-        if (lead_image_url) {
+        else
+            changes['recipes.' + id + '.title'] = 'Recipe ' + id;
+        if (lead_image_url)
             changes['recipes.' + id + '.lead_image_url'] = lead_image_url;
-        }
+        else
+            changes['recipes.' + id + '.lead_image_url'] = '/uploads/recipe-default.jpg';
+
         db.update({username: username}, {$set: changes}, (error, numReplaced, upsert) => {
             if (error || numReplaced == 0) {
                 console.log(`Błąd przy aktualizacji przepisu`);
