@@ -51,6 +51,7 @@ $icon-font-path: '/vendor/fonts/';
 .main-avatar {
     max-width: 100px;
     border-radius: 100%;
+    margin-right: 10px;
 }
 
 a {
@@ -66,6 +67,54 @@ a {
     text-align: right;
 }
 
+.note-toolbar {
+    i {
+        color: black;
+    }
+}
+
+.note-editing-area {
+    img {
+        max-width: 500px;
+        max-height: 700px;
+        display: block;
+        margin: 0 auto;
+    }
+
+    .container {
+        width: auto !important;
+    }
+}
+
+i {
+    padding-right: 0px !important;
+    color: #eeeeee;
+}
+
 .glyphicon {
     padding-right: 0.5em;
+}
+
+.panel-footer {
+    background-color: white;
+    text-align: center;
+    font-size: 11px;
+    color: #888;
+}
+
+#content {
+    .container {
+        width: auto !important;
+    }
+
+    img {
+        max-width: 500px;
+        max-height: 700px;
+        display: block;
+        margin: 0 auto;
+    }
+}
+
+#tags {
+    max-width: 60%;
 }

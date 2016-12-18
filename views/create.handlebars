@@ -1,4 +1,4 @@
-<!-- views/home.handlebars -->
+<!-- views/create.handlebars -->
 {{#if user}}
   <div class="panel panel-default">
     <div class="panel-heading">
@@ -24,17 +24,15 @@
       </form>
     </div>
   </div>
-
 {{else}}
-  <div class="jumbotron">
-    <h1>Cookbook</h1>
-    <p>Sign in and view your profile!</p>
+  <div class="jumbotron" style="text-align: center">
+    <h1>Welcome to your cookbook</h1>
+    <p>Sign in to view your profile!</p>
     <p>
-      <a href="/signin" class="btn btn-primary btn-lg" role="button">
+      <a href="/signin" class="btn btn-default btn-lg" role="button">
         <span class="glyphicon glyphicon-user"></span>
-        Sign in!
+        Go to the login page
       </a>
     </p>
   </div>
-
 {{/if}}

@@ -1,4 +1,5 @@
-<!-- views/home.handlebars -->
+<!-- views/settings.handlebars -->
+{{#if owner}}
 <div class="jumbotron">
   <h1>
     <a class="header" href="/user/{{owner.username}}">
@@ -9,38 +10,44 @@
     </a>
   </h1>
 </div>
-
-<!--<form enctype="multipart/form-data">-->
-<!--<label for="av">Choose avatar: </label>-->
-<!--<input type="file" id="av" class="form-group" name="avatar" accept="image/*">-->
-<!--<button  type="submit" id="send" onclick="(function() {-->
-  <!--var avatarInput = document.getElementById('av');-->
-  <!--var avatarField = document.getElementById('avatar-img');-->
-  <!--$.get('/settings', {avatar: newContent, id: newId, title: newTitle, lead_image_url: newPicture}, function(data, textStatus, xhr) {-->
-    <!--location.href = '/';-->
-  <!--});-->
-<!--})()">Wyslij</button>-->
-<!--<img src="" alt="" id="avatar-img" />-->
-<!--</form>-->
-
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Settings</h3>
+  </div>
+<div class="panel-body">
 <form id="uploadAvatar" enctype="multipart/form-data" action="/uploadAvatar" method="post">
   <div class="form-group">
-    <label for="av">Choose avatar: </label>
+    <label for="av">Choose avatar (make sure it's square!): </label>
     <input type="file" name="userPhoto" />
   </div>
   <div class="form-group">
   <button type="submit" class="btn btn-primary" value="Upload image" name="submitAvatar">Submit picture</button>
   </div>
 </form>
-
-<form id="updatePassword" onsubmit="return validatePassword()" action="/updatePassword" method="post">
-  <div class="form-group">
+<form id="updatePassword" onsubmit="return validatePassword()" action="/updatePassword" method="post" style="margin-top: 30px;">
+  <div class="form-group" style="max-width: 300px;">
     <label for="av">Change password: </label>
     <input type="password" class="form-control" name="newPassword1" id="newPassword1" placeholder="New password"/>
   </div>
-    <div class="form-group">
+    <div class="form-group" style="max-width: 300px;">
     <input type="password" class="form-control" name="newPassword2" id="newPassword2" placeholder="Repeat new password"/>
       <span id="helpBlock" class="help-block hidden">The passwords do not match!</span>
   </div>
+  <div class="form-group">
   <button type="submit" class="btn btn-primary" value="Upload image" name="submitAvatar">Submit new password</button>
+  </div>
 </form>
+</div>
+</div>
+{{else}}
+  <div class="jumbotron" style="text-align: center">
+    <h1>Welcome to your cookbook</h1>
+    <p>Sign in to view your profile!</p>
+    <p>
+      <a href="/signin" class="btn btn-default btn-lg" role="button">
+        <span class="glyphicon glyphicon-user"></span>
+        Go to the login page
+      </a>
+    </p>
+  </div>
+{{/if}}

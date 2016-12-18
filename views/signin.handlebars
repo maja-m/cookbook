@@ -1,46 +1,80 @@
 <!-- views/signin.handlebars -->
-<div class="jumbotron">
+<div class="jumbotron" style="text-align: center">
   <h1>Welcome to your cookbook</h1>
-  <p>
-    <a data-toggle="collapse" href="#local-sign-in" class="btn btn-warning btn-lg" role="button"><span
-      class="glyphicon glyphicon-user"></span> Sign in</a>
-    <a data-toggle="collapse" href="#local-reg" class="btn btn-warning btn-lg" role="button"><span
-      class="glyphicon glyphicon-plus"></span> Sign up</a>
-  </p>
+  <p>Sign in to view your profile or register a new account!</p>
 
-  <form id="local-sign-in" class="collapse form-horizontal" action="/login" method="post">
-    <div class="form-group">
-      <label for="username" class="col-sm-2 control-label">Username</label>
-      <div class="col-sm-5">
-        <input type="text" id="username" name="username" class="form-control" placeholder="Enter username"/>
+  <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true" style="margin-top: 50px">
+    <div class="panel panel-default">
+      <div class="panel-heading" role="tab" id="headingOne">
+        <h4 class="panel-title">
+          <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne" >
+            <span
+              class="glyphicon glyphicon-user"></span> Sign in
+          </a>
+        </h4>
+      </div>
+      <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+        <div class="panel-body">
+          <form id="local-sign-in" class="form-horizontal" action="/login" method="post">
+            <div class="form-group" style="margin-top: 50px;">
+              <label for="username" class="col-sm-2 control-label">Username</label>
+              <div class="col-sm-5">
+                <input type="text" id="username" name="username" class="form-control" placeholder="Enter username"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="password" class="col-sm-2 control-label">Password</label>
+              <div class="col-sm-5">
+                <input type="password" id="password" name="password" class="form-control" placeholder="Enter password"/>
+              </div>
+            </div>
+            <div>
+              <input type="submit" class="btn btn-primary btn-sm pull-right" value="Log in"/>
+            </div>
+          </form></div>
       </div>
     </div>
-    <div class="form-group">
-      <label for="password" class="col-sm-2 control-label">Password</label>
-      <div class="col-sm-5">
-        <input type="password" id="password" name="password" class="form-control" placeholder="Enter password"/>
+    <div class="panel panel-default">
+      <div class="panel-heading" role="tab" id="headingTwo">
+        <h4 class="panel-title">
+          <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" >
+            <span class="glyphicon glyphicon-plus"></span> Sign up</a>
+        </h4>
+      </div>
+      <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+        <div class="panel-body">
+          <form id="local-reg" class="form-horizontal" action="/local-reg" method="post">
+            <div class="form-group" style="margin-top: 50px;">
+              <label for="new-username" class="col-sm-2 control-label">New username</label>
+              <div class="col-sm-5">
+                <input type="text" id="new-username" name="username" class="form-control" placeholder="Enter username"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="new-password" class="col-sm-2 control-label">New password</label>
+              <div class="col-sm-5">
+                <input type="password" id="new-password" name="password" class="form-control" placeholder="Enter password"/>
+              </div>
+            </div>
+            <div>
+              <input type="submit" class="btn btn-primary btn-sm pull-right" value="Register"/>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
-    <div>
-      <input type="submit" class="btn btn-primary btn-sm pull-right" value="Log in"/>
-    </div>
-  </form>
-
-  <form id="local-reg" class="collapse form-horizontal" action="/local-reg" method="post">
-    <div class="form-group">
-      <label for="new-username" class="col-sm-2 control-label">New username</label>
-      <div class="col-sm-5">
-        <input type="text" id="new-username" name="username" class="form-control" placeholder="Enter username"/>
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="new-password" class="col-sm-2 control-label">New password</label>
-      <div class="col-sm-5">
-        <input type="password" id="new-password" name="password" class="form-control" placeholder="Enter password"/>
-      </div>
-    </div>
-    <div>
-      <input type="submit" class="btn btn-primary btn-sm pull-right" value="Register"/>
-    </div>
-  </form>
+  </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -10,36 +10,33 @@
   </h1>
 </div>
 <div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title"></h3>
-  </div>
   <div class="panel-body">
-    <!--<ul id = "recipesList" class="recipesList">-->
-      <!--{{#each owner.recipes}}-->
-        <!--<a href="/user/{{../owner.username}}/recipe/{{@key}}"><li id={{url}} >{{title}}</li></a>-->
-      <!--{{/each}}-->
-    <!--</ul>-->
     {{#ifLoggedUser user.username owner.username}}
-      <button id="edit" class="btn btn-primary" onclick="edit()" type="button"><span class="glyphicon glyphicon-pencil"></span>Edit</button>
-      <button id="save" class="btn btn-primary" onclick="save()" type="button" style="display:none;"><span class="glyphicon glyphicon-ok"></span>Save</button>
-      <button id="deleteRecipe" class="btn btn-primary" onclick="deleteRecipe()" type="button"><span class="glyphicon glyphicon-remove"></span>Delete</button>
+      <div class="pull-right">
+        <button id="edit" class="btn btn-primary" onclick="edit()" type="button"><span class="glyphicon glyphicon-pencil"></span>Edit</button>
+        <button id="save" class="btn btn-primary" onclick="save()" type="button" style="display:none;"><span class="glyphicon glyphicon-ok"></span>Save</button>
+        <button id="cancel" class="btn btn-primary" onclick="cancel()" type="button" style="display:none;"><span class="glyphicon glyphicon-remove"></span>Cancel</button>
+        <button id="deleteRecipe" class="btn btn-primary" onclick="deleteRecipe()" type="button"><span class="glyphicon glyphicon-trash"></span>Delete</button>
+      </div>
     {{/ifLoggedUser}}
-    <h2 id="title">{{recipe.title}}</h2>
-    <label for="stars" id="stars-label" class="control-label"></label>
-    <input id="stars" {{#if recipe.stars}}value="{{recipe.stars}}" {{/if}} />
-    <label for="tags" id="tags-label" class="control-label">Tags: </label>
-    <input id="tags" data-role="tagsinput"/>
+    <h1 id="title">{{recipe.title}}</h1>
     {{#if recipe.domain}}
       <h4 id="domain">Source: {{recipe.domain}}</h4>
     {{/if}}
-    <div style="position:relative;">
+    <div style="margin-top: 1.5em;">
+      <input id="stars" {{#if recipe.stars}}value="{{recipe.stars}}" {{/if}} />
+    </div>
+    <div style="margin-top: 1.5em;">
+      <label for="tags" id="tags-label" class="control-label">Tags: </label>
+      <input id="tags" data-role="tagsinput"/>
+    </div>
+    <div style="position:relative; margin-top:1.5em;">
       <div id="content" class="click2edit" data-id="{{id}}">{{{recipe.content}}}</div>
     </div>
-  </div>
-
-  <div id="disqus_thread"></div>
+</div>
+<div id="disqus_thread"></div>
   <script>
-    (function() { // DON'T EDIT BELOW THIS LINE
+    (function() {
       var d = document, s = d.createElement('script');
       s.src = '//cookbook-3.disqus.com/embed.js';
       s.setAttribute('data-timestamp', +new Date());

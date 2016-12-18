@@ -167,7 +167,7 @@ app.get('/user/:username/:tag?', function (req, res) {
             res.render('user', {user: req.user, owner: user, tag: req.params.tag});
         }).catch(function (error) {
             console.error(error);
-            res.send(error);
+            res.redirect('/');
         });
     }
 
@@ -299,10 +299,13 @@ app.get('/user/:user/recipe/:id', function (req, res) {
     var chosenId = req.params.id;
     db.getUser(req.params.user)
     .then(function (user) {
-        res.render('recipe', {user: req.user, recipe: user.recipes[chosenId], id: req.params.id, owner: user});
+        if(user.recipes[chosenId])
+            res.render('recipe', {user: req.user, recipe: user.recipes[chosenId], id: req.params.id, owner: user});
+        else
+            res.redirect('/');
     }).catch(function (error) {
         console.error(error);
-        res.send(error);
+        res.redirect('/');
     });
 });
 
@@ -313,6 +316,14 @@ app.get('/logout', function (req, res) {
     req.logout();
     res.redirect('/');
     req.session.notice = "You have successfully been logged out " + name + "!";
+});
+
+app.get('*', function(req, res) {
+    res.redirect('/');
+});
+
+app.get('/user/*', function(req, res) {
+    res.redirect('/');
 });
 
 //===============PORT=================

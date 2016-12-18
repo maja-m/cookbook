@@ -7,89 +7,57 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="User Authentication">
   <meta name="author" content="">
-
-  <title>User Authentication</title>
-
-  <!-- Latest compiled and minified CSS -->
-  <!--<link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.css" rel="stylesheet">-->
+  <title>Cookbook</title>
   <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-star-rating/4.0.1/css/star-rating.css" media="all" rel="stylesheet" type="text/css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.css" />
   <link rel="stylesheet" href="/assets/style.css" />
-
   </head>
-
   <body>
-
     <div class="container">
-
       <nav class="navbar navbar-default" role="navigation">
-      <div class="container-fluid">
-
-      <!-- Brand and toggle get grouped for better mobile display -->
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-      </div>
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          <ul class="nav navbar-nav">
-            <li>
-              {{#if user}}
-                <p class="navbar-text">
-                  <strong>Hi,</strong>
-                  <a href="/user/{{user.username}}">
-                    <img src="/uploads/{{user.avatar}}" class="img-circle" width="20" height="20">
-                    {{user.username}}
-                  </a>
-                  <a href="/settings">
-                    <strong><span onclick="settings()" class="glyphicon glyphicon-cog" style="padding-left: 0.5em; padding-right: 0.5em"></strong>
-                  </a>
-                </p>
+        <div class="container-fluid">
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+              <li>
+                {{#if user}}
+                  <p class="navbar-text">
+                    <strong>Hi,</strong>
+                    <a href="/user/{{user.username}}">
+                      <img src="/uploads/{{user.avatar}}" class="img-circle" width="20" height="20">
+                      {{user.username}}
+                    </a>
+                    <a href="/settings">
+                      <strong><span onclick="settings()" class="glyphicon glyphicon-cog" style="padding-left: 0.5em; padding-right: 0.5em"></span></strong>
+                    </a>
+                  </p>
                 </li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                  <li>
-                    <a href="/logout">Log out</a>
-                  </li>
-              {{else}}
-                <a href="/signin">Sign In</a>
+              </ul>
+              <ul class="nav navbar-nav navbar-right">
+                <li>
+                  <a href="/logout">Log out</a>
                 </li>
-              {{/if}}
-          </ul>
-        </div><!-- /.navbar-collapse -->
-      </div><!-- /.container-fluid -->
+                {{else}}
+                  <a href="/signin">Sign in</a>
+                {{/if}}
+            </ul>
+          </div>
+        </div>
     </nav>
-
     <div id="alert"></div>
-
-
     {{#if error}}
       <p class="alert alert-danger">{{error}}</p>
     {{/if}}
-
     {{#if success}}
       <p class="alert alert-success">{{success}}</p>
     {{/if}}
-
     {{#if notice}}
       <p class="alert alert-info">{{notice}}</p>
     {{/if}}
-
-    <!--where our other templates will insert-->
+    <!--other templates will insert here-->
     {{{body}}}
-
-
-    </div> <!-- /container -->
-
-
-
-   <!-- ================================================== -->
+    <div class="panel-footer">Maja Marchewka | 2017</div>
+  </div>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.js"></script>
@@ -107,16 +75,9 @@
       $(document).ready(function() {
           $('.summernote').summernote({minHeight: 600, callbacks: { onPaste : onPaste}});
       });
-  
-      // $('.summernote').on('summernote.paste', function(e) {
-      //   console.log(e);
-      //   $('.summernote').summernote('removeFormat');
-      // });
-  
-      var editButton = document.getElementById("edit");
+
       var saveButton = document.getElementById("save");
-      var saveNewButton = document.getElementById("saveNew");
-      var deleteRecipeButton = document.getElementById("deleteRecipe");
+      var cancelButton = document.getElementById("cancel");
       var $content = $("#content");
       var id = $content.attr('data-id');
       var $title = $("#title").text();
@@ -124,11 +85,13 @@
   
       var edit = function() {
           saveButton.style="display:inline;";
+        cancelButton.style="display:inline;";
           $('.click2edit').summernote({focus: true, onPaste: onPaste});
       };
   
       var save = function() {
           saveButton.style="display:none;";
+        cancelButton.style="display:none;";
   
           var makrup = $('.click2edit').summernote('code');
           $('.click2edit').summernote('destroy');
@@ -136,6 +99,15 @@
           $.post('/updateRecipe', {content: $content.html(), id: id, title: $title}, function(data, textStatus, xhr) {
               $("#alert").html('<p class="alert alert-success">' + data + '</p>');
           });
+      };
+
+      var cancel = function() {
+        saveButton.style="display:none;";
+        cancelButton.style="display:none;";
+
+        var makrup = $('.click2edit').summernote('code');
+        $('.click2edit').summernote('destroy');
+        location.reload();
       };
   
       var saveNew = function() {
@@ -173,7 +145,7 @@
       var hasVoted = Cookies.get(cookieName);
 
       $("#stars")
-        .rating({displayOnly: hasVoted, min:0, max:5, step:1, size:'xs'})
+        .rating({displayOnly: hasVoted, min:0, max:5, step:1, size:'xs', clearButton: '', starCaptionClasses: {1: '', 2: '', 3: '', 4: '', 5: ''}})
         .on('rating.change', function(event, value) {
         $.post('/updateStars', {value: value, id: id, owner: '{{owner.username}}'}, function(data, textStatus, xhr) {
           $("#alert").html('<p class="alert alert-success">' + data + '</p>');
@@ -201,5 +173,5 @@
           });
       });
     </script>
-</body>
+  </body>
 </html>
