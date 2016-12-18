@@ -60,7 +60,7 @@ exports.register = (username, password) => {
     let user = {
         "username": username,
         "password": hash,
-        "avatar": "default-user.png"
+        "avatar": "/assets/defaults/default-user.png"
     };
 
     return new Promise((resolve, reject) => {
@@ -125,7 +125,7 @@ exports.getUser = (username) => {
 exports.updateAvatar = (username, path) => {
     return new Promise((resolve, reject) => {
         let changes = {};
-        changes['avatar'] = path;
+        changes['avatar'] = '/uploads/' + path;
 
         db.update({username: username}, {$set: changes}, (error, numReplaced, upsert) => {
             if (error || numReplaced == 0) {
@@ -175,7 +175,7 @@ exports.addRecipe = (username, url) => {
                 else {
                     if (data && data.content && htmlToText.fromString(data.content).trim()) {
                         if(!data.lead_image_url)
-                            data.lead_image_url = '/uploads/recipe-default.jpg';
+                            data.lead_image_url = '/assets/defaults/recipe-default.jpg';
                         let id = new Date().getTime();
                         db.update({username: username}, {$set: {['recipes.' + id]: data}}, (error, numReplaced, upsert) => {
                             if (error || numReplaced == 0) {
@@ -229,7 +229,7 @@ exports.createRecipe = (username, id, content, title, lead_image_url) => {
         if (lead_image_url)
             changes['recipes.' + id + '.lead_image_url'] = lead_image_url;
         else
-            changes['recipes.' + id + '.lead_image_url'] = '/uploads/recipe-default.jpg';
+            changes['recipes.' + id + '.lead_image_url'] = '/assets/defaults/recipe-default.jpg';
 
         db.update({username: username}, {$set: changes}, (error, numReplaced, upsert) => {
             if (error || numReplaced == 0) {
