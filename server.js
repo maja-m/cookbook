@@ -154,7 +154,6 @@ app.get('/', function (req, res) {
     else {
         res.redirect('/signin');
     }
-    //res.render('home', {user: req.user});
 });
 
 app.get('/user/:username/:tag?', function (req, res) {
